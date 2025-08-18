@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  runpod-image-generator:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - RUNPOD_API_KEY=${RUNPOD_API_KEY}
+      - RUNPOD_ENDPOINT_ID=${RUNPOD_ENDPOINT_ID:-aj1jw0guu5uziz}
+    volumes:
+      - ./generated_images:/app/generated_images
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
